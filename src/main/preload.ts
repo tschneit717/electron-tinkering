@@ -1,13 +1,13 @@
 // Disable no-unused-vars, broken for spread args
 /* eslint no-unused-vars: off */
 import { contextBridge, ipcRenderer, type IpcRendererEvent } from 'electron'
-import config from 'dotenv'
-export type Channels = 'ipc-example'
-
-const API_KEY = config.config()?.parsed?.OPENAI_API_KEY ?? ''
+export type Channels = 'ipc-example' | 'get-secrets'
 
 const electronHandler = {
   ipcRenderer: {
+    async invoke(channel: Channels, args: unknown[]) {
+      return await ipcRenderer.invoke(channel, args).then(res => res)
+    },
     sendMessage(channel: Channels, args: unknown[]) {
       ipcRenderer.send(channel, args)
     },
@@ -21,9 +21,6 @@ const electronHandler = {
     },
     once(channel: Channels, func: (...args: unknown[]) => void) {
       ipcRenderer.once(channel, (_event, ...args) => { func(...args) })
-    },
-    envVariables: {
-      OPENAI_API_KEY: API_KEY
     }
   }
 }
