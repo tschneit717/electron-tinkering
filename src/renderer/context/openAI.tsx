@@ -1,21 +1,13 @@
-import { type PropsWithChildren, createContext, useState } from 'react'
+import { type PropsWithChildren, createContext } from 'react'
 import OpenAIClient from 'renderer/api/OpenAIClient'
 
-export const OpenAiContext = createContext({})
+export const OpenAiContext = createContext({
+  openAiClient: new OpenAIClient(window.electron)
+})
 
 export const OpenAiProvider = ({ children }: PropsWithChildren): JSX.Element => {
-  const [openAi, setOpenAi] = useState<OpenAIClient | null>(null)
-
-  async function buildAiClient(): Promise<void> {
-    const electron = window.electron
-    const secrets = await electron.ipcRenderer.invoke('get-secrets', []) ?? {}
-    const openAIClient = new OpenAIClient(secrets.OPENAI_API_KEY)
-    setOpenAi(openAIClient)
-  }
-
-  if (!openAi) {
-    void buildAiClient()
-  }
+  const electron = window.electron
+  const openAi = new OpenAIClient(electron)
 
   const values = {
     openAiClient: openAi

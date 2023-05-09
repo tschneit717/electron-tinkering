@@ -14,16 +14,20 @@ import { app, BrowserWindow, shell, ipcMain } from 'electron'
 import MenuBuilder from './menu'
 import { resolveHtmlPath } from './utilities/resolveHtmlPath'
 import { validateSender } from './utilities/validateSender'
-import { getSecrets } from './utilities/getSectrets'
+import OpenAIClient from './api/openAI'
+import config from 'dotenv'
 
 let mainWindow: BrowserWindow | null = null
+const openAIClient = OpenAIClient.getInstance(config.config()?.parsed?.OPENAI_API_KEY ?? '')
 
-ipcMain.handle('get-secrets', (e) => {
+ipcMain.handle('open-ai', async (e, [command, prompt]) => {
   if (!validateSender(e.senderFrame)) return null
-  return getSecrets(e)
+  const res = await openAIClient.makeRequest(command, prompt)
+  console.log(res)
+  return res
 })
 
-const createWindow = async () => {
+const createWindow = async (): Promise<void> => {
   const RESOURCES_PATH = app.isPackaged
     ? path.join(process.resourcesPath, 'assets')
     : path.join(__dirname, '../../assets')
