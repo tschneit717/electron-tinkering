@@ -16,7 +16,9 @@
   "javascript.validate.enable": false,
   "javascript.format.enable": false,
   "typescript.format.enable": false,
-
+  "editor.detectIndentation": true,
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
   "search.exclude": {
     ".git": true,
     ".eslintcache": true,
