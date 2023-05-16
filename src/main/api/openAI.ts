@@ -32,6 +32,7 @@ export default class OpenAIClient {
     if (command === 'chat') {
       const completion = await OpenAIClient.client.createChatCompletion({
         model: 'gpt-3.5-turbo',
+        temperature: 0.1,
         messages: [{ role: 'user', content: prompt }]
       })
       return completion.data.choices[0].message

@@ -2,19 +2,32 @@ import { MemoryRouter as Router, Routes, Route } from 'react-router-dom'
 import icon from '../../assets/icon.svg'
 import './App.css'
 import { Button } from './components/Button'
-import { useContext, useState } from 'react'
+import { type FormEvent, useContext, useState } from 'react'
 import { OpenAiContext, OpenAiProvider } from './context/openAI'
 import { type ConversationType } from 'shared/types'
 
 function Hello(): JSX.Element {
-  const openAiContext = useContext(OpenAiContext)
-  const openAiClient = openAiContext.openAiClient
+  const { openAiClient, setActiveConversation, activeConversation } = useContext(OpenAiContext)
   const [prompt, setPrompt] = useState<string>('')
   const [conversations, setConversations] = useState<ConversationType[]>([])
-  const handleButtonClick = async (): Promise<void> => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
+    e.preventDefault()
     try {
-      const res = await openAiClient.getCompletion(prompt)
+      setActiveConversation([...activeConversation, {
+        role: 'user',
+        content: prompt
+      }])
+      const res = await openAiClient.getCompletion(prompt, activeConversation)
       setConversations([...conversations, res])
+    } catch (e) {
+      console.error(e)
+    }
+  }
+  const handleResetConversation = (): void => {
+    try {
+      setPrompt('')
+      setConversations([])
+      setActiveConversation([])
     } catch (e) {
       console.error(e)
     }
@@ -26,9 +39,10 @@ function Hello(): JSX.Element {
       </div>
       <h1>electron-react-boilerplate</h1>
       <input value={prompt} onChange={(e) => { setPrompt(e.target.value) }}></input>
-      <div className="Hello">
-        <Button text={'Hello world'} callback={handleButtonClick}/>
-      </div>
+      <form onSubmit={handleSubmit} className="Hello">
+        <Button text={'Submit'} type={'submit'}/>
+        <Button text={'Reset'} type={'button'} callback={handleResetConversation}/>
+      </form>
       {conversations.length > 0
         ? conversations.map((conversation, index) => {
           console.log(conversation)
