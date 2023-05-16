@@ -1,34 +1,44 @@
+/* eslint-disable no-undef */
 module.exports = {
-  'parser': '@typescript-eslint/parser',
-  'env': {
-    'browser': true,
-    'es2021': true,
-    'node': true
+  env: {
+    browser: true,
+    es2021: true
   },
-  'extends': [
-    'eslint:recommended',
-    'plugin:@typescript-eslint/eslint-recommended',
-    'plugin:@typescript-eslint/recommended',
-    'plugin:react/recommended'
-  ],
-  'overrides': [],
-  'parserOptions': {
-    'ecmaFeatures': {
-      jsx: true
-    },
-    'ecmaVersion': 'latest',
-    'sourceType': 'module'
-  },
-  'plugins': [
+  root: true,
+  parser: '@typescript-eslint/parser',
+  plugins: [
     'react',
     '@typescript-eslint'
   ],
-  'settings': {
-    'react': {
-      'version': 'detect'
+  extends: [
+    'eslint:recommended',
+    'plugin:@typescript-eslint/eslint-recommended',
+    'plugin:@typescript-eslint/recommended'
+  ],
+  settings: {
+    overrides: [],
+    parserOptions: {
+      ecmaFeatures: {
+        jsx: true
+      },
+      ecmaVersion: 'latest',
+      sourceType: 'module',
+      project: ['./tsconfig.json']
+    },
+    'import/resolver': {
+      node: {
+        paths: ['src']
+      }
+    },
+    react: {
+      version: 'detect'
     }
   },
-  'rules': {
-    'react/react-in-jsx-scope': 0
+  rules: {
+    'indent': ['error', 2],
+    'react/prop-types': 'off',
+    'react/react-in-jsx-scope': 'off',
+    '@typescript-eslint/strict-boolean-expressions': 'off',
+    '@typescript-eslint/space-before-function-paren': 'off'
   }
 }

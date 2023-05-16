@@ -2,7 +2,7 @@ import { type ButtonHTMLAttributes, type DetailedHTMLProps } from 'react'
 
 interface ButtonProps extends DetailedHTMLProps<ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement> {
   text: string
-  callback?: () => any
+  callback?: () => void
 }
 
 function Button({ text, callback, ...rest }: ButtonProps): JSX.Element {

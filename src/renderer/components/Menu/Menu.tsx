@@ -5,7 +5,7 @@ export default function Menu (): JSX.Element {
         <h2>Menu</h2>
       </div>
       <ul>
-                <li>Home</li>
+        <li>Home</li>
       </ul>
     </nav>
   )

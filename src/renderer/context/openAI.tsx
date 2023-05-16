@@ -1,11 +1,17 @@
-import { type PropsWithChildren, createContext, useState } from 'react'
+import { type PropsWithChildren, createContext, useState, type Dispatch, type SetStateAction } from 'react'
 import OpenAIClient from 'renderer/api/OpenAIClient'
 import { type ConversationType } from 'shared/types'
 
-export const OpenAiContext = createContext({
+interface OpenAiContextType {
+  openAiClient: OpenAIClient,
+  activeConversation: ConversationType[],
+  setActiveConversation: Dispatch<SetStateAction<ConversationType[]>>
+}
+
+export const OpenAiContext = createContext<OpenAiContextType>({
   openAiClient: new OpenAIClient(window.electron),
-  activeConversation: [] as ConversationType[],
-  setActiveConversation: (conversation: ConversationType[]) => {}
+  activeConversation: [],
+  setActiveConversation: () => void 0
 })
 
 export const OpenAiProvider = ({ children }: PropsWithChildren): JSX.Element => {
