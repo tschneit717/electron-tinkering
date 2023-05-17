@@ -23,7 +23,6 @@ const openAIClient = OpenAIClient.getInstance(config.config()?.parsed?.OPENAI_AP
 ipcMain.handle('open-ai', async (e, [command, prompt]) => {
   if (!validateSender(e.senderFrame)) return null
   const res = await openAIClient.makeRequest(command, prompt)
-  console.log(res)
   return res
 })
 

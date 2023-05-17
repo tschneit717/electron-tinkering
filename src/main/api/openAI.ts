@@ -29,6 +29,14 @@ export default class OpenAIClient {
     if (!OpenAIClient.instance) return
     console.log('command', command)
     console.log('prompt', prompt)
+    if (command === 'init') {
+      const completion = await OpenAIClient.client.createChatCompletion({
+        model: 'gpt-3.5-turbo',
+        temperature: 0.1,
+        messages: [{ role: 'system', content: prompt }]
+      })
+      return completion.data.choices[0].message
+    }
     if (command === 'chat') {
       const completion = await OpenAIClient.client.createChatCompletion({
         model: 'gpt-3.5-turbo',

@@ -1,4 +1,5 @@
 import { type ElectronHandler } from 'main/preload'
+import { AI_CONFIG } from 'shared/config'
 import { type ConversationType } from 'shared/types'
 
 export default class OpenAIClient {
@@ -6,6 +7,17 @@ export default class OpenAIClient {
 
   constructor(handler: ElectronHandler) {
     this.handler = handler
+    
+  }
+  
+  private initialize = (prompt: string, activeConversation: ConversationType[]) => {
+    const response = this.makeRequest('init', prompt, activeConversation)
+    return response
+  }
+  
+  async create(activeConversation: ConversationType[]) {
+    const res = await this.initialize(AI_CONFIG.initial_prompt, activeConversation)
+    return res
   }
 
   async getCompletion(prompt: string, activeConversation: ConversationType[]): Promise<ConversationType> {

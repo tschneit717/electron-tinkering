@@ -8,3 +8,7 @@ export interface ConversationType {
 export interface SettingsType {
   openai: any
 }
+
+export interface SubmissionValues {
+  prompt: string;
+}

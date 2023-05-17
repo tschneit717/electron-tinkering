@@ -2,5 +2,11 @@
  * @NOTE: Prepend a `~` to css file paths that are in your node_modules
  *        See https://github.com/webpack-contrib/sass-loader#imports
  */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 @import "~/node_modules/nes.css/css/nes.css";
+@import "~/node_modules/nes.icons/css/nes-icons.css";
+@import './assets/styles/fonts.css';
+@import './assets/styles/global.css';

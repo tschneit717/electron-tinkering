@@ -1,20 +1,17 @@
 import { MemoryRouter as Router, Route, Routes } from 'react-router-dom'
 import './App.css'
 import { OpenAiProvider } from './context/openAI'
-import Layout from './components/Layout/Layout'
 import ChatView from './views/ChatView'
 import { SettingsProvider } from './context/settingsContext'
-
+import './assets/fonts/PressStart2P-Regular.ttf'
 
 const routes = [
   {
     path: '/',
-    layout: Layout,
     component: <ChatView/>
   },
   {
     path: '/settings',
-    layout: Layout,
     component: <h1>Settings</h1>
   }
 ]

@@ -1,46 +1,51 @@
-import { FormEvent, useContext, useState } from "react"
+import { FormEvent, useContext, useEffect, useState } from "react"
 import { Conversation } from "renderer/components/Conversation"
 import { Form } from "renderer/components/Form"
+import Layout from "renderer/components/Layout/Layout"
 import { OpenAiContext } from "renderer/context/openAI"
-import { ConversationType } from "shared/types"
+import { ConversationType, SubmissionValues } from "shared/types"
 
 export default function ChatView(): JSX.Element {
-  const { openAiClient, setActiveConversation, activeConversation } = useContext(OpenAiContext)
-  const [prompt, setPrompt] = useState<string>('')
+  const { openAiClient, setActiveConversation, initializeBot } = useContext(OpenAiContext)
   const [conversations, setConversations] = useState<ConversationType[]>([])
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>, values: SubmissionValues): Promise<void> => {
     e.preventDefault()
     try {
-      setActiveConversation([...activeConversation, {
+      setConversations([...conversations, {
         role: 'user',
-        content: prompt
+        content: values.prompt
       }])
-      const res = await openAiClient.getCompletion(prompt, activeConversation)
-      setConversations([...conversations, res])
+      const resp = await openAiClient.getCompletion(values.prompt, conversations)
+      setConversations(conversations => [...conversations, resp])
     } catch (e) {
       console.error(e)
     }
   }
   const handleResetConversation = (): void => {
     try {
-      setPrompt('')
       setConversations([])
       setActiveConversation([])
     } catch (e) {
       console.error(e)
     }
   }
+
+  useEffect(() => {
+    async function fetchData() {
+      console.log(typeof initializeBot)
+      const res = await initializeBot()
+      setConversations([res])
+    }
+    fetchData();
+  }, [])
+
+  useEffect(() => {
+    window.scrollTo(0, document.body.scrollHeight);
+  }, [conversations])
+
   return (
-    <div>
-      <h1>Chat Adventures</h1>
-      <Form 
-        formElements={[{
-          label: "Ask your question",
-          name: "prompt"
-        }]}
-        handleSubmit={handleSubmit}
-        handleReset={handleResetConversation}/>
-      <section className="nes-container">
+    <Layout title={"Chat Adventures"}>
+      <section className="nes-container mb-4">
         <section className="message-list">
           {conversations.length > 0
             ? conversations.map((conversation, index) => {
@@ -50,6 +55,13 @@ export default function ChatView(): JSX.Element {
             : <></>}
         </section>
       </section>
-    </div>
+      <Form 
+        formElements={[{
+          label: "Write your prompt here",
+          name: "prompt"
+        }]}
+        handleSubmit={handleSubmit}
+        handleReset={handleResetConversation}/>
+    </Layout>
   )
 }
