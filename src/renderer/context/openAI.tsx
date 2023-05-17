@@ -4,10 +4,10 @@ import { type ConversationType } from 'shared/types'
 import { SettingsContext } from './settingsContext'
 
 interface OpenAiContextType {
-  initializeBot: unknown,
   openAiClient: OpenAIClient,
   activeConversation: ConversationType[],
   setActiveConversation: Dispatch<SetStateAction<ConversationType[]>>
+  initializeBot: (() => Promise<ConversationType>) | (() => void)
 }
 
 export const OpenAiContext = createContext<OpenAiContextType>({
@@ -29,8 +29,9 @@ export const OpenAiProvider = ({ children }: PropsWithChildren): JSX.Element => 
       const res = await openAi.create(activeConversation)
       setActiveConversation([res])
       return res
-    } catch (e) {
+    } catch (e: unknown) {
       console.error(e)
+      throw new Error(e as string);
     }
   }
   

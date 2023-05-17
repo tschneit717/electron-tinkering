@@ -32,9 +32,10 @@ export default function ChatView(): JSX.Element {
 
   useEffect(() => {
     async function fetchData() {
-      console.log(typeof initializeBot)
       const res = await initializeBot()
-      setConversations([res])
+      if (res) {
+        setConversations([res])
+      }
     }
     fetchData();
   }, [])
