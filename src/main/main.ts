@@ -20,9 +20,9 @@ import config from 'dotenv'
 let mainWindow: BrowserWindow | null = null
 const openAIClient = OpenAIClient.getInstance(config.config()?.parsed?.OPENAI_API_KEY ?? '')
 
-ipcMain.handle('open-ai', async (e, [command, prompt]) => {
+ipcMain.handle('open-ai', async (e, [command, prompt,  previousMessages]) => {
   if (!validateSender(e.senderFrame)) return null
-  const res = await openAIClient.makeRequest(command, prompt)
+  const res = await openAIClient.makeRequest(command, prompt, previousMessages)
   return res
 })
 

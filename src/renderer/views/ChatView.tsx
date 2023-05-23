@@ -14,7 +14,6 @@ export default function ChatView(): JSX.Element {
     e.preventDefault()
     try {
       await addMessage(values.prompt)
-      e.currentTarget.reset()
     } catch (e) {
       console.error(e)
     }

@@ -19,11 +19,7 @@ export const useAIChat = () => {
   const addMessage = async (message?: string) => {
     const updatedMessages = message ? [...messages, toHistoryEntry(message)] : messages;
     setMessages(updatedMessages); // possible "race condition" here if addMessage called fast
-    const response = await openAiClient.create({
-      model: "gpt-3.5-turbo",
-      messages: updatedMessages,
-      temperature: 0,
-    });
+    const response = await openAiClient.getCompletion(message || AI_CONFIG.initial_prompt, updatedMessages);
 
     let assistantMessage;
     if (response) {
