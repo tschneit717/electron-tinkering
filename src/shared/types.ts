@@ -11,8 +11,12 @@ export interface ConversationType {
 export interface SettingsType {
   openai: any
 }
+export interface ChatSubmissionType {
+  prompt: string
+}
 
-export type SubmissionValues = object
+export type SubmissionValues = ChatSubmissionType | ChatSubmissionType
+
 
 export interface CreateChatCompletion{ 
   model: string,

@@ -1,7 +1,7 @@
 import { FormEvent, useState } from "react"
 import { Button } from "../Button"
 import { InputField } from "./Input"
-import { SubmissionValues } from "shared/types"
+import { ChatSubmissionType, SubmissionValues } from "shared/types"
 
 
 interface FormElement {
@@ -30,7 +30,7 @@ export default function Form ({ handleSubmit, formElements, handleReset}: FormPr
   const submitHandler = async (e: FormEvent<HTMLFormElement>) => {
     toggleIsLoading(true)
     try {
-      await handleSubmit(e, formValues);
+      await handleSubmit(e, formValues as unknown as ChatSubmissionType);
       setFormValues(Object.fromEntries(Object.entries(formValues).map((formValue) => {
         return [formValue[0], formValue[1] = '']
       })))

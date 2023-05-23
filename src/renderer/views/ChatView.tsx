@@ -1,16 +1,15 @@
-import { FormEvent, useContext, useEffect, useState } from "react"
+import { FormEvent, useEffect, useState } from "react"
 import { Conversation } from "renderer/components/Conversation"
 import { Form } from "renderer/components/Form"
 import Layout from "renderer/components/Layout/Layout"
-import { OpenAiContext } from "renderer/context/openAI"
 import { useAIChat } from "renderer/hooks/useAIChat"
 import { getRandomInt } from "renderer/utilities/getRandomNumbers"
-import { ConversationType, SubmissionValues } from "shared/types"
+import { ChatSubmissionType } from "shared/types"
 
 export default function ChatView(): JSX.Element {
   const [messages, addMessage, reset] = useAIChat()
   const [progress, setProgress] = useState(0)
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>, values: SubmissionValues): Promise<void> => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>, values: ChatSubmissionType): Promise<void> => {
     e.preventDefault()
     try {
       await addMessage(values.prompt)
@@ -50,7 +49,7 @@ export default function ChatView(): JSX.Element {
 
   const renderChat = () => {
     if (messages && messages.length > 1) {
-      return messages.slice(1).map((conversation, index) => {
+      return messages.slice(1).map((conversation) => {
         return (<Conversation key={conversation.content} content={conversation.content} role={conversation.role}></Conversation>)
       })
     } else {
