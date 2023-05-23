@@ -7,11 +7,9 @@ interface OpenAiContextType {
   openAiClient: OpenAIClient,
   activeConversation: ConversationType[],
   setActiveConversation: Dispatch<SetStateAction<ConversationType[]>>
-  initializeBot: (() => Promise<ConversationType>) | (() => void)
 }
 
 export const OpenAiContext = createContext<OpenAiContextType>({
-  initializeBot: () => void 0,
   openAiClient: new OpenAIClient(window.electron),
   activeConversation: [],
   setActiveConversation: () => void 0
@@ -24,19 +22,7 @@ export const OpenAiProvider = ({ children }: PropsWithChildren): JSX.Element => 
   
   const [activeConversation, setActiveConversation] = useState<ConversationType[]>([])
   
-  const initializeBot = async () => {
-    try {
-      const res = await openAi.create(activeConversation)
-      setActiveConversation([res])
-      return res
-    } catch (e: unknown) {
-      console.error(e)
-      throw new Error(e as string);
-    }
-  }
-  
   const values = {
-    initializeBot,
     openAiClient: openAi,
     activeConversation,
     setActiveConversation

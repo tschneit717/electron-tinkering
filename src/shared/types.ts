@@ -1,7 +1,10 @@
 export type Channels = 'ipc-example' | 'get-secrets' | 'open-ai'
 export type Commands = 'chat' | 'completion'
+
+export type ChatCompletionMessageRoles = 'user' | 'assistant' | 'system'
+
 export interface ConversationType {
-  role: 'assistant' | 'user' | 'system'
+  role: ChatCompletionMessageRoles
   content: string
 }
 
@@ -9,6 +12,10 @@ export interface SettingsType {
   openai: any
 }
 
-export interface SubmissionValues {
-  prompt: string;
+export type SubmissionValues = object
+
+export interface CreateChatCompletion{ 
+  model: string,
+  messages: ConversationType[],
+  temperature: number,
 }

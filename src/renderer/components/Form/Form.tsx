@@ -5,8 +5,7 @@ import { SubmissionValues } from "shared/types"
 
 
 interface FormElement {
-  label: string
-  name: string
+  [x: string]: string
 }
 interface FormProps {
   handleSubmit: (e: FormEvent<HTMLFormElement>, formValues: SubmissionValues) => Promise<void>
@@ -16,11 +15,14 @@ interface FormProps {
 
 
 export default function Form ({ handleSubmit, formElements, handleReset}: FormProps) {
-  const [formValues, setFormValues] = useState({ prompt: '' })
+  const initialSet = {} as FormElement
+  formElements.map((element) => { initialSet[element.name] = '' })
+
+  const [formValues, setFormValues] = useState(initialSet)
   const [isLoading, toggleIsLoading] = useState(false)
   const handleFormElementUpdate = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFormValues({
-      ...formValues,
+      ...formValues, 
       [event.target.name]: event.target.value
     })
   }
@@ -29,6 +31,9 @@ export default function Form ({ handleSubmit, formElements, handleReset}: FormPr
     toggleIsLoading(true)
     try {
       await handleSubmit(e, formValues);
+      setFormValues(Object.fromEntries(Object.entries(formValues).map((formValue) => {
+        return [formValue[0], formValue[1] = '']
+      })))
     } catch (e) {
       console.error(e)
     }
@@ -37,9 +42,11 @@ export default function Form ({ handleSubmit, formElements, handleReset}: FormPr
 
   return (
     <form onSubmit={submitHandler}>
-      {formElements.map((formElement, index) => (
-        <InputField className="mb-4" label={formElement.label} name={formElement.name} changeHandler={handleFormElementUpdate}/>
-      ))}
+      {formElements.map((element, index) => {
+        const label = Object.entries(element)[0]
+        const name = Object.entries(element)[1]
+        return <InputField className="mb-4" propValue={formValues[name[1]]} label={label[1]} name={name[1]} changeHandler={handleFormElementUpdate}/>
+      })}
       <div className="flex gap-4 mb-4">
         <Button text={'Submit'} disabled={isLoading} status={isLoading ? "disabled" : "success"} type={'submit'}/>
         <Button text={'Reset'} status="warning" type={'button'} callback={handleReset}/>
