@@ -4,6 +4,9 @@ import { OpenAiProvider } from './context/openAI'
 import ChatView from './views/ChatView'
 import { SettingsProvider } from './context/settingsContext'
 import './assets/fonts/PressStart2P-Regular.ttf'
+import CharacterView from './views/CharacterCreatorView'
+import SettingsView from './views/SettingsView'
+import { CharacterContextProvider } from './context/characterContext'
 
 const routes = [
   {
@@ -11,8 +14,12 @@ const routes = [
     component: <ChatView/>
   },
   {
+    path: '/character-sheet',
+    component: <CharacterView/>
+  },
+  {
     path: '/settings',
-    component: <h1>Settings</h1>
+    component: <SettingsView/>
   }
 ]
 
@@ -21,12 +28,14 @@ export default function App(): JSX.Element {
     <Route path={path} element={component}></Route>
   ))
   return (
-    <SettingsProvider>
-      <OpenAiProvider>
-        <Router>
-          <Routes>{routeComponents}</Routes>
-        </Router>
-      </OpenAiProvider>
-    </SettingsProvider>
+    <CharacterContextProvider>
+      <SettingsProvider>
+        <OpenAiProvider>
+          <Router>
+            <Routes>{routeComponents}</Routes>
+          </Router>
+        </OpenAiProvider>
+      </SettingsProvider>
+    </CharacterContextProvider>
   )
 }

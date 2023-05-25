@@ -5,22 +5,22 @@ import { ChatSubmissionType, SubmissionValues } from "shared/types"
 
 
 interface FormElement {
-  [x: string]: string
+  [key: string]: string | string[];
 }
 interface FormProps {
-  handleSubmit: (e: FormEvent<HTMLFormElement>, formValues: SubmissionValues) => Promise<void>
+  handleSubmit: (e: FormEvent<HTMLFormElement>, formValues: SubmissionValues) => Promise<void> | void
   formElements: FormElement[]
-  handleReset: () => void
+  handleReset?: () => void
 }
 
 
 export default function Form ({ handleSubmit, formElements, handleReset}: FormProps) {
   const initialSet = {} as FormElement
-  formElements.map((element) => { initialSet[element.name] = '' })
+  formElements.map((element) => { initialSet[!Array.isArray(element) ? element.name : element[1]] = '' })
 
   const [formValues, setFormValues] = useState(initialSet)
   const [isLoading, toggleIsLoading] = useState(false)
-  const handleFormElementUpdate = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFormElementUpdate = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     setFormValues({
       ...formValues, 
       [event.target.name]: event.target.value
@@ -43,13 +43,16 @@ export default function Form ({ handleSubmit, formElements, handleReset}: FormPr
   return (
     <form onSubmit={submitHandler}>
       {formElements.map((element, index) => {
-        const label = Object.entries(element)[0]
-        const name = Object.entries(element)[1]
-        return <InputField className="mb-4" propValue={formValues[name[1]]} label={label[1]} name={name[1]} changeHandler={handleFormElementUpdate}/>
+        console.log(element)
+        const label = Object.entries(element)[0][1]
+        const name = Object.entries(element)[1][1]
+        const type = Object.entries(element)[2][1]
+        console.log(label, name, type)
+        return <InputField className="mb-4" propValue={formValues[name]} label={label} name={name} inputType={type} changeHandler={handleFormElementUpdate}/>
       })}
       <div className="flex gap-4 mb-4">
         <Button text={'Submit'} disabled={isLoading} status={isLoading ? "disabled" : "success"} type={'submit'}/>
-        <Button text={'Reset'} status="warning" type={'button'} callback={handleReset}/>
+        {handleReset ? <Button text={'Reset'} status="warning" type={'button'} callback={handleReset}/> : <></>}
       </div>
     </form>
   )

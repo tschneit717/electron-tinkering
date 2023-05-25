@@ -5,10 +5,13 @@ export default function Nav () {
     <nav>
       <ul className="flex gap-4"> 
         <li>
-          <Link to={"/"}>Home</Link>
+          <Link to={"/"}>{`<Home>`}</Link>
         </li>
         <li>
-          <Link to={"/settings"}>Settings</Link>
+          <Link to={"/character-sheet"}>{`<Character Sheet>`}</Link>
+        </li>
+        <li>
+          <Link to={"/settings"}>{`<Settings>`}</Link>
         </li>
       </ul>
     </nav>

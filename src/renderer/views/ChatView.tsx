@@ -67,7 +67,8 @@ export default function ChatView(): JSX.Element {
       <Form
         formElements={[{
           label: "Write your prompt here",
-          name: "prompt"
+          name: "prompt",
+          type: "textarea"
         }]}
         handleSubmit={handleSubmit}
         handleReset={handleResetConversation}/>
