@@ -1,5 +1,5 @@
 interface MenuProps {
-  conversations: any[]
+  conversations: string[]
 }
 export default function Menu ({ conversations }: MenuProps): JSX.Element {
   return (
@@ -8,7 +8,7 @@ export default function Menu ({ conversations }: MenuProps): JSX.Element {
         <h2>Conversations</h2>
       </div>
       <ul> 
-        {conversations.map((conversation, index) => (
+        {conversations.map((conversation) => (
           <li key={conversation}>
             <a>Conversation: </a>
           </li>

@@ -1,18 +1,8 @@
 import { FormEvent, useState } from "react"
 import { Button } from "../Button"
 import { InputField } from "./Input"
-import { ChatSubmissionType, SubmissionValues } from "shared/types"
-
-
-interface FormElement {
-  [key: string]: string | string[];
-}
-interface FormProps {
-  handleSubmit: (e: FormEvent<HTMLFormElement>, formValues: SubmissionValues) => Promise<void> | void
-  formElements: FormElement[]
-  handleReset?: () => void
-}
-
+import { ChatSubmissionType } from "shared/types"
+import { FormElement, FormProps } from "./Form.interface"
 
 export default function Form ({ handleSubmit, formElements, handleReset}: FormProps) {
   const initialSet = {} as FormElement
@@ -44,11 +34,14 @@ export default function Form ({ handleSubmit, formElements, handleReset}: FormPr
     <form onSubmit={submitHandler}>
       {formElements.map((element, index) => {
         console.log(element)
-        const label = Object.entries(element)[0][1]
-        const name = Object.entries(element)[1][1]
-        const type = Object.entries(element)[2][1]
-        console.log(label, name, type)
-        return <InputField className="mb-4" propValue={formValues[name]} label={label} name={name} inputType={type} changeHandler={handleFormElementUpdate}/>
+        const labelArr = Object.entries(element)[0]
+        const nameArr = Object.entries(element)[1]
+        const typeArr = Object.entries(element)[2] ?? ['type', 'text']
+        const selectFields = Object.entries(element)[3] as string[]
+        const label = labelArr[1] as string
+        const name = nameArr[1] as string
+        const type = typeArr[1] as string
+        return <InputField className="mb-4" selectFields={selectFields as string[]} propValue={formValues[name]as string} label={label} name={name} inputType={type} changeHandler={handleFormElementUpdate}/>
       })}
       <div className="flex gap-4 mb-4">
         <Button text={'Submit'} disabled={isLoading} status={isLoading ? "disabled" : "success"} type={'submit'}/>

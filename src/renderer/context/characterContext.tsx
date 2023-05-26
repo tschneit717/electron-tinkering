@@ -1,4 +1,4 @@
-import { PropsWithChildren, createContext, useEffect, useState } from "react"
+import { PropsWithChildren, createContext, useState } from "react"
 import { CharacterType } from "shared/character"
 
 interface CharacterContextType {

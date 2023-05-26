@@ -9,7 +9,7 @@ export interface ConversationType {
 }
 
 export interface SettingsType {
-  openai: any
+  openai: unknown
 }
 export interface ChatSubmissionType {
   prompt: string
@@ -18,7 +18,7 @@ export interface ChatSubmissionType {
 export type SubmissionValues = ChatSubmissionType | ChatSubmissionType
 
 
-export interface CreateChatCompletion{ 
+export interface CreateChatCompletion { 
   model: string,
   messages: ConversationType[],
   temperature: number,

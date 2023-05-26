@@ -1,5 +1,6 @@
 import { FormEvent, useContext, useEffect } from "react";
 import { Form } from "renderer/components/Form";
+import { FormElement } from "renderer/components/Form/Form.interface";
 import Layout from "renderer/components/Layout/Layout";
 import { CharacterContext } from "renderer/context/characterContext";
 
@@ -64,7 +65,7 @@ export default function CharacterView(): JSX.Element {
         <>
           <h1>Create a character</h1>
           <Form
-            formElements={characterFields}
+            formElements={characterFields as FormElement[]}
             handleSubmit={handleSubmit}/>
         </>
       ) : <p>{character.name}</p>}
