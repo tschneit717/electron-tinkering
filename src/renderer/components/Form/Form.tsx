@@ -37,10 +37,11 @@ export default function Form ({ handleSubmit, formElements, handleReset}: FormPr
         const labelArr = Object.entries(element)[0]
         const nameArr = Object.entries(element)[1]
         const typeArr = Object.entries(element)[2] ?? ['type', 'text']
-        const selectFields = Object.entries(element)[3] as string[]
+        const selectFieldsArr = Object.entries(element)[3] as string[]
         const label = labelArr[1] as string
         const name = nameArr[1] as string
         const type = typeArr[1] as string
+        const selectFields = selectFieldsArr ? selectFieldsArr[1] : [] as string[]
         return <InputField className="mb-4" selectFields={selectFields as string[]} propValue={formValues[name]as string} label={label} name={name} inputType={type} changeHandler={handleFormElementUpdate}/>
       })}
       <div className="flex gap-4 mb-4">

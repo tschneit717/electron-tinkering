@@ -1,4 +1,5 @@
 import { FormEvent, useContext, useEffect } from "react";
+import { CharacterSheet } from "renderer/components/CharacterSheet";
 import { Form } from "renderer/components/Form";
 import { FormElement } from "renderer/components/Form/Form.interface";
 import Layout from "renderer/components/Layout/Layout";
@@ -21,6 +22,22 @@ export default function CharacterView(): JSX.Element {
     {
       label: "Name",
       name: "name"
+    },
+    {
+      label: "Race",
+      name: "race",
+      type: "select",
+      selectFields: [
+        'Human',
+        'Elf',
+        'Dwarf',
+        'Halfling',
+        'Gnome',
+        'Half-Elf',
+        'Half-Orc',
+        'Dragonborn',
+        'Tiefling'
+      ]
     },
     {
       label: "Class",
@@ -47,6 +64,7 @@ export default function CharacterView(): JSX.Element {
     setCharacter({
       name: values.name,
       class: values.class,
+      race: values.race,
       level: 1,
       currentHitpoints: 10,
       maxHitpoints: 10,
@@ -68,7 +86,7 @@ export default function CharacterView(): JSX.Element {
             formElements={characterFields as FormElement[]}
             handleSubmit={handleSubmit}/>
         </>
-      ) : <p>{character.name}</p>}
+      ) : <CharacterSheet/>}
     </Layout>
   )
 }
