@@ -7,10 +7,15 @@ import './assets/fonts/PressStart2P-Regular.ttf'
 import CharacterView from './views/CharacterCreatorView'
 import SettingsView from './views/SettingsView'
 import { CharacterContextProvider } from './context/characterContext'
+import StartView from './views/StartView'
 
 const routes = [
   {
     path: '/',
+    component: <StartView/>
+  },
+  {
+    path: '/play',
     component: <ChatView/>
   },
   {
