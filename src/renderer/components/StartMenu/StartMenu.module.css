@@ -1,3 +1,7 @@
+.startMenuItem a:focus {
+  outline: none;
+}
+
 .startMenuItemActive a::before {
   position: absolute;
   left: -25px;

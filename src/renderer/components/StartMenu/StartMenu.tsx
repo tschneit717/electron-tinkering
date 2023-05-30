@@ -23,6 +23,27 @@ export default function StartMenu({ links }: StartMenuProps) {
     );
   }, [linksLength]);
 
+  const handleKeyDown = (event: KeyboardEvent) => {
+    if (event.key === 'ArrowUp') {
+      event.preventDefault();
+      setActiveItem((prevActiveItem) =>
+        prevActiveItem === 0 ? linksLength - 1 : prevActiveItem - 1,
+      );
+    } else if (event.key === 'ArrowDown') {
+      event.preventDefault();
+      setActiveItem((prevActiveItem) => (prevActiveItem + 1) % linksLength);
+    }
+  }
+
+  useEffect(() => {
+    elRefs[activeItem]?.current?.focus();
+  }, [activeItem])
+
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [])
+
   useEffect(() => {
     elRefs[0]?.current?.focus();
   }, [elRefs]);
