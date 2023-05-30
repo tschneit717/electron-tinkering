@@ -1,4 +1,5 @@
 import { useContext } from "react"
+import { Link } from "react-router-dom"
 import { CharacterContext } from "renderer/context/characterContext"
 
 export default function CharacterSheet () {
@@ -32,6 +33,10 @@ export default function CharacterSheet () {
             </ul>
           </div>
         </div>
+      </div>
+      <div>
+        <h2>Let's Play!</h2>
+        <Link className="nes-btn is-primary" to="/play">Start Game</Link>
       </div>
     </div>
   )

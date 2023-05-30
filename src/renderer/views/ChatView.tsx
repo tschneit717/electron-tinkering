@@ -1,12 +1,28 @@
-import { FormEvent, useEffect, useState } from "react"
+import { FormEvent, useContext, useEffect, useState } from "react"
+import { Link } from "react-router-dom"
 import { Conversation } from "renderer/components/Conversation"
 import { Form } from "renderer/components/Form"
 import Layout from "renderer/components/Layout/Layout"
+import { CharacterContext } from "renderer/context/characterContext"
 import { useAIChat } from "renderer/hooks/useAIChat"
 import { getRandomInt } from "renderer/utilities/getRandomNumbers"
 import { ChatSubmissionType } from "shared/types"
 
 export default function ChatView(): JSX.Element {
+  const characterContext = useContext(CharacterContext)
+  const { character, setCharacter } = characterContext
+
+  if (!character) {
+    return (
+      <Layout title={"Chat Adventures"}>
+        <div className="nes-container is-rounded">
+          <p className="title">You need to create a character first!</p>
+          <Link to="/character" className="nes-btn is-primary">Create Character</Link>
+        </div>
+      </Layout>
+    )
+  }
+
   const [messages, addMessage, reset] = useAIChat()
   const [progress, setProgress] = useState(0)
   const handleSubmit = async (e: FormEvent<HTMLFormElement>, values: ChatSubmissionType): Promise<void> => {
@@ -58,7 +74,7 @@ export default function ChatView(): JSX.Element {
   }
 
   return (
-    <Layout title={"Chat Adventures"}>
+    <Layout title={"Chat Adventures"}>  
       <section className="nes-container mb-4">
         <section className="message-list">
           {renderChat()}

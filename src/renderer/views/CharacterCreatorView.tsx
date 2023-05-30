@@ -1,11 +1,10 @@
-import { FormEvent, useContext, useEffect } from "react";
+import { FormEvent, useContext } from "react";
 import Store from "renderer/api/Store";
 import { CharacterSheet } from "renderer/components/CharacterSheet";
 import { Form } from "renderer/components/Form";
 import { FormElement } from "renderer/components/Form/Form.interface";
 import Layout from "renderer/components/Layout/Layout";
 import { CharacterContext } from "renderer/context/characterContext";
-import { CharacterClassesEnum } from "shared/character";
 
 export default function CharacterView(): JSX.Element {
   const store = new Store(window.electron);
@@ -83,13 +82,10 @@ export default function CharacterView(): JSX.Element {
             submitButtonLabel="Create"
             formElements={characterFields as FormElement[]}
             handleSubmit={handleSubmit}/>
-
+          <h2>Or load a previous save: </h2>
+          <button className="nes-btn is-primary" onClick={handlePreviousSave}>Load</button>
         </>
       ) : <CharacterSheet/>}
-      <div>
-        <h2>Or load a previous save: </h2>
-        <button className="nes-btn is-primary" onClick={handlePreviousSave}>Load</button>
-      </div>
     </Layout>
   )
 }
