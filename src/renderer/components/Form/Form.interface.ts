@@ -5,6 +5,7 @@ export interface FormElement {
   [key: string]: string | string[];
 }
 export interface FormProps {
+  submitButtonLabel: string
   handleSubmit: (e: FormEvent<HTMLFormElement>, formValues: SubmissionValues) => Promise<void> | void
   formElements: FormElement[]
   handleReset?: () => void

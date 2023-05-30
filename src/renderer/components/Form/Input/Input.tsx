@@ -19,7 +19,7 @@ export default function Input ({label, name, selectFields, inputType = 'text',  
       <label htmlFor={name}>{label}</label>
       {inputType ==='select' ? (
         <div className="nes-select">
-          <select onChange={handleUpdate} required id="default_select">
+          <select onChange={handleUpdate} name={name} required id="default_select">
             <option value="" disabled selected hidden>Select...</option>
             {selectFields ? selectFields.map((field) => {
               return <option value={field}>{field}</option>

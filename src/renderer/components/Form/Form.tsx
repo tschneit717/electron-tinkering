@@ -33,7 +33,6 @@ export default function Form ({ handleSubmit, formElements, handleReset}: FormPr
   return (
     <form onSubmit={submitHandler}>
       {formElements.map((element, index) => {
-        console.log(element)
         const labelArr = Object.entries(element)[0]
         const nameArr = Object.entries(element)[1]
         const typeArr = Object.entries(element)[2] ?? ['type', 'text']

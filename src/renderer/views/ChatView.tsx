@@ -65,6 +65,7 @@ export default function ChatView(): JSX.Element {
         </section>
       </section>
       <Form
+        submitButtonLabel="Send"
         formElements={[{
           label: "Write your prompt here",
           name: "prompt",

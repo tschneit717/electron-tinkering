@@ -1,20 +1,14 @@
 import { FormEvent, useContext, useEffect } from "react";
+import Store from "renderer/api/Store";
 import { CharacterSheet } from "renderer/components/CharacterSheet";
 import { Form } from "renderer/components/Form";
 import { FormElement } from "renderer/components/Form/Form.interface";
 import Layout from "renderer/components/Layout/Layout";
 import { CharacterContext } from "renderer/context/characterContext";
-
-
-// name: string
-// level: number
-// class: CharacterClassesEnum
-// currentHitpoints: number
-// maxHitpoints: number
-// gold: number
-// inventory: InventoryItem[]
+import { CharacterClassesEnum } from "shared/character";
 
 export default function CharacterView(): JSX.Element {
+  const store = new Store(window.electron);
   const characterContext = useContext(CharacterContext)
   const { character, setCharacter } = characterContext
   
@@ -60,8 +54,7 @@ export default function CharacterView(): JSX.Element {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>, values: any) => {
     e.preventDefault()
-
-    setCharacter({
+    const char = {
       name: values.name,
       class: values.class,
       race: values.race,
@@ -70,12 +63,16 @@ export default function CharacterView(): JSX.Element {
       maxHitpoints: 10,
       gold: 0,
       inventory: []
-    })
+    }
+    setCharacter(char)
+
+    store.set('character', char)
   }
 
-  useEffect(() => {
-    console.log(character)
-  }, [character])
+  const handlePreviousSave = async () => {
+    const char = await store.get('character')
+    setCharacter(char)
+  }
 
   return (
     <Layout title={"Chat Adventures"}>
@@ -83,10 +80,16 @@ export default function CharacterView(): JSX.Element {
         <>
           <h1>Create a character</h1>
           <Form
+            submitButtonLabel="Create"
             formElements={characterFields as FormElement[]}
             handleSubmit={handleSubmit}/>
+
         </>
       ) : <CharacterSheet/>}
+      <div>
+        <h2>Or load a previous save: </h2>
+        <button className="nes-btn is-primary" onClick={handlePreviousSave}>Load</button>
+      </div>
     </Layout>
   )
 }

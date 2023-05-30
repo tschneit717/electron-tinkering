@@ -1,4 +1,4 @@
-export type Channels = 'ipc-example' | 'get-secrets' | 'open-ai'
+export type Channels = 'ipc-example' | 'get-secrets' | 'open-ai' | 'character'
 export type Commands = 'chat' | 'completion'
 
 export type ChatCompletionMessageRoles = 'user' | 'assistant' | 'system'

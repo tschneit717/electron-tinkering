@@ -19,7 +19,7 @@ const routes = [
     component: <ChatView/>
   },
   {
-    path: '/character-sheet',
+    path: '/character',
     component: <CharacterView/>
   },
   {

@@ -16,6 +16,7 @@ import { resolveHtmlPath } from './utilities/resolveHtmlPath'
 import { validateSender } from './utilities/validateSender'
 import OpenAIClient from './api/openAI'
 import config from 'dotenv'
+import { get, set, deleteKey } from './store'
 
 let mainWindow: BrowserWindow | null = null
 const openAIClient = OpenAIClient.getInstance(config.config()?.parsed?.OPENAI_API_KEY ?? '')
@@ -24,6 +25,16 @@ ipcMain.handle('open-ai', async (e, [command, prompt,  previousMessages]) => {
   if (!validateSender(e.senderFrame)) return null
   const res = await openAIClient.makeRequest(command, prompt, previousMessages)
   return res
+})
+
+ipcMain.handle('character', async (e, [command, key, value]) => {
+  if (!validateSender(e.senderFrame)) return null
+  if (command === 'set') {
+    set(key, value)
+  }
+  if (command === 'get') {
+    return get(key)
+  }
 })
 
 const createWindow = async (): Promise<void> => {
