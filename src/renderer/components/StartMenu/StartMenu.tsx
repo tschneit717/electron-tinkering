@@ -1,6 +1,7 @@
 import { LegacyRef, createRef, useEffect, useState } from 'react'
 import styles from './StartMenu.module.css'
 import cn from 'classnames'
+import { Link } from 'react-router-dom'
 
 interface StartMenuProps {
   links: {
@@ -53,7 +54,9 @@ export default function StartMenu({ links }: StartMenuProps) {
         <li 
           className={cn(styles.startMenuItem, 'relative',  { [styles.startMenuItemActive]: activeItem === i })}
           key={link.name}>
-          <a onFocus={() => setActiveItem(i)} ref={elRefs[i]} href={link.path}>{link.name}</a>
+          <Link onFocus={() => setActiveItem(i)} ref={elRefs[i]} to={link.path}>
+            {link.name}
+          </Link>
         </li>
       ))}
     </ul>
