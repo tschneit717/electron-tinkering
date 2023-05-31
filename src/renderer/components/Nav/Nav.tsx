@@ -8,7 +8,7 @@ export default function Nav () {
           <Link to={"/"}>{`<Home>`}</Link>
         </li>
         <li>
-          <Link to={"/character-sheet"}>{`<Character Sheet>`}</Link>
+          <Link to={"/character"}>{`<Character Sheet>`}</Link>
         </li>
         <li>
           <Link to={"/settings"}>{`<Settings>`}</Link>

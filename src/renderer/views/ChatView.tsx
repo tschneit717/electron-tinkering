@@ -4,18 +4,21 @@ import { Conversation } from "renderer/components/Conversation"
 import { Form } from "renderer/components/Form"
 import Layout from "renderer/components/Layout/Layout"
 import { CharacterContext } from "renderer/context/characterContext"
+import { ViewContext } from "renderer/context/viewContext"
 import { useAIChat } from "renderer/hooks/useAIChat"
 import { getRandomInt } from "renderer/utilities/getRandomNumbers"
 import { ChatSubmissionType } from "shared/types"
 
 export default function ChatView(): JSX.Element {
+  const viewContext = useContext(ViewContext)
+  const { isDark } = viewContext
   const characterContext = useContext(CharacterContext)
   const { character, setCharacter } = characterContext
 
   if (!character) {
     return (
       <Layout title={"Chat Adventures"}>
-        <div className="nes-container is-rounded">
+        <div className={`nes-container is-rounded ${isDark ? 'is-dark' : ''}`}>
           <p className="title">You need to create a character first!</p>
           <Link to="/character" className="nes-btn is-primary">Create Character</Link>
         </div>
@@ -75,7 +78,7 @@ export default function ChatView(): JSX.Element {
 
   return (
     <Layout title={"Chat Adventures"}>  
-      <section className="nes-container mb-4">
+      <section className={`nes-container mb-4 ${isDark ? 'is-dark' : ''}`}>
         <section className="message-list">
           {renderChat()}
         </section>

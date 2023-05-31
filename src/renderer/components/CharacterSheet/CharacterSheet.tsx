@@ -1,8 +1,11 @@
 import { useContext } from "react"
 import { Link } from "react-router-dom"
 import { CharacterContext } from "renderer/context/characterContext"
+import { ViewContext } from "renderer/context/viewContext"
 
 export default function CharacterSheet () {
+  const viewContext = useContext(ViewContext)
+  const { isDark } = viewContext
   const characterContext = useContext(CharacterContext)
   const { character } = characterContext
   const { name, level, race, class: classType, currentHitpoints, maxHitpoints, gold, inventory } = character || {}
@@ -10,7 +13,7 @@ export default function CharacterSheet () {
   return (
     <div>
       <h1>Character Sheet</h1>
-      <div className="nes-container with-title is-centered">
+      <div className={`nes-container with-title is-centered ${isDark ? 'is-dark': ''}`}>
         <p className="title">{name}</p>
         <div className="flex flex-wrap justify-between">
           <div className="lists text-left pl-6 mt-4">
@@ -20,10 +23,10 @@ export default function CharacterSheet () {
               <li>Class: {classType}</li>
             </ul>
           </div>
-          <div className="nes-container w-auto">
+          <div className={`nes-container w-auto ${isDark ? 'is-dark': ''}`}>
             <p>HP: <span className="nes-text is-error">{currentHitpoints}/{maxHitpoints}</span></p>
           </div>
-          <div className="nes-container with-title w-full mt-4">
+          <div className={`nes-container with-title w-full mt-4 ${isDark ? 'is-dark': ''}`}>
             <p className="title">Inventory</p>
             <ul className="nes-list is-disc pl-6 flex align-start flex-wrap max-h-96">
               <li>Gold: {gold}</li>

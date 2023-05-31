@@ -1,0 +1,17 @@
+:global(.nes-btn.is-dark) {
+  background-color: #292524;
+  color: #fff;
+}
+
+:global(.nes-btn.is-dark:after) {
+  box-shadow: inset -4px -4px #0c0a09;
+  color: #fff;
+}
+
+:global(.nes-btn.is-dark:active:after) {
+  box-shadow: inset 4px 4px #0c0a09;
+}
+
+:global(.is-dark) .nes-btn {
+  border-color: #fff;
+}

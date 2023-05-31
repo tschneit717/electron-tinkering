@@ -8,7 +8,7 @@ import CharacterView from './views/CharacterCreatorView'
 import SettingsView from './views/SettingsView'
 import { CharacterContextProvider } from './context/characterContext'
 import StartView from './views/StartView'
-
+import { ViewContextProvider } from './context/viewContext'
 const routes = [
   {
     path: '/',
@@ -33,14 +33,16 @@ export default function App(): JSX.Element {
     <Route path={path} element={component}></Route>
   ))
   return (
-    <CharacterContextProvider>
-      <SettingsProvider>
-        <OpenAiProvider>
-          <Router>
-            <Routes>{routeComponents}</Routes>
-          </Router>
-        </OpenAiProvider>
-      </SettingsProvider>
-    </CharacterContextProvider>
+    <ViewContextProvider>
+      <CharacterContextProvider>
+        <SettingsProvider>
+          <OpenAiProvider>
+            <Router>
+              <Routes>{routeComponents}</Routes>
+            </Router>
+          </OpenAiProvider>
+        </SettingsProvider>
+      </CharacterContextProvider>
+    </ViewContextProvider>
   )
 }
