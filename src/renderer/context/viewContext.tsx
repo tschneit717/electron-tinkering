@@ -37,4 +37,4 @@ export const ViewContextProvider = ({ children }: PropsWithChildren): JSX.Elemen
       </div>
     </ViewContext.Provider>
   )
-}
+}                                           

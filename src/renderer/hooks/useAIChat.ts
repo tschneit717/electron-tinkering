@@ -15,9 +15,7 @@ const toHistoryEntry = (message: string, role: ChatCompletionMessageRoles = 'use
 
 const buildInitialPrompt = (character: CharacterType) => {
   return `${AI_CONFIG.initial_prompt} .
-  Here is the character sheet for the user playing the game: ${JSON.stringify(character)}
-  
-  You are always to refer to this character information when asked a question about who the player is`
+  Here is the character sheet for the user playing the game: ${JSON.stringify(character)}.`
 }
 
 const ACTIONS_TYPE = {
@@ -27,12 +25,17 @@ const ACTIONS_TYPE = {
   UPDATE_INVENTORY: 'update inventory',
   UPDATE_CHARACTER: 'update character',
   UPDATE_SETTINGS: 'update settings',
+  STORY_UPDATE: 'story update',
   RESET: 'reset',
 }
 
 export const useAIChat = () => {
   const characterContext = useContext(CharacterContext);
-  const { character } = characterContext;
+  const { character, levelUp,
+    updateHitPoints,
+    updateInventory,
+    updateGold,
+    status } = characterContext;
   const [messages, setMessages] = useState<ConversationType[]>([toHistoryEntry(AI_CONFIG.initial_prompt, 'system')])
   const openAiContext = useContext(OpenAiContext);
   const { openAiClient } = openAiContext;
@@ -45,9 +48,12 @@ export const useAIChat = () => {
     let assistantMessage;
     if (response) {
       assistantMessage = response.content;
+      const handledAction = handleAction(assistantMessage)
+      console.log(assistantMessage)
+      console.log(handledAction)
       setMessages([
         ...updatedMessages,
-        toHistoryEntry(assistantMessage, 'assistant')
+        toHistoryEntry(handledAction, 'assistant')
       ]);
     } else {
       throw new Error("No response from OpenAI");
@@ -66,32 +72,32 @@ export const useAIChat = () => {
   const handleAction = (message: string) => {
     try {
       const parsedResponse = JSON.parse(message);
-      const response = {};
       if (parsedResponse && parsedResponse.action) {
-        switch (parsedResponse.action) {
+        switch (parsedResponse.action.type) {
         case ACTIONS_TYPE.LEVEL_UP:
-          
+          levelUp(parsedResponse.action.data as number)
           break;
         case ACTIONS_TYPE.UPDATE_HEALTH:
+          updateHitPoints(parsedResponse.action.data as number)
           break;
         case ACTIONS_TYPE.UPDATE_GOLD:
+          updateGold(parsedResponse.action.data as number)
           break;
         case ACTIONS_TYPE.UPDATE_INVENTORY:
+          updateInventory(parsedResponse.action.data as { name: string, description: string, value: number, weight: number, quantity: number }[])
           break;
+        case ACTIONS_TYPE.STORY_UPDATE:
+        case ACTIONS_TYPE.RESET:
         case ACTIONS_TYPE.UPDATE_CHARACTER:
-          break;
         case ACTIONS_TYPE.UPDATE_SETTINGS:
           break;
-        case ACTIONS_TYPE.RESET:
-          reset();
-          break;
-        default:
-          break;
         }
+        return parsedResponse.message;
       }
     }
     catch (e) {
-      console.log(e);
+      console.error(e);
+      return 'I do not understand that action.'
     }
   }
 
@@ -100,6 +106,6 @@ export const useAIChat = () => {
     ConversationType[],
     (message: string) => Promise<string>,
     () => void,
-    () => void
+    () => string
   ];
 }

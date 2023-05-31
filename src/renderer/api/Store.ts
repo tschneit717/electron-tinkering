@@ -14,13 +14,11 @@ export default class Store {
   
   async get(key: string) {
     const data = await this.makeRequest('get', key)
-    console.log(data)
     return data
   }
   
   async set(key: string, value: string | object) {
     const data = await this.makeRequest('set', key, value)
-    console.log(data)
     return data
   }
 

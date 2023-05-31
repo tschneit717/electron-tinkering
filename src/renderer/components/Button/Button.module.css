@@ -1,6 +1,10 @@
 :global(.nes-btn.is-dark) {
   background-color: #292524;
+  color: #fff;    
+  border-image-source: url(data:image/svg+xml;utf8,<?xml%20version=%221.0%22%20encoding=%22UTF-8%22%20?%3E%3Csvg%20version=%221.1%22%20width=%225%22%20height=%225%22%20xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cpath%20d=%22M2%201%20h1%20v1%20h-1%20z%20M1%202%20h1%20v1%20h-1%20z%20M3%202%20h1%20v1%20h-1%20z%20M2%203%20h1%20v1%20h-1%20z%22%20fill=%22rgb%28255,255,255%29%22%20/%3E%3C/svg%3E);
+  outline-color: #e7e7e7;
   color: #fff;
+  background-color: #212529;
 }
 
 :global(.nes-btn.is-dark:after) {

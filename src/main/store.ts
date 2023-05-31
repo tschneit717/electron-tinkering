@@ -102,6 +102,6 @@ export const get = (key: string) => {
   return store.get(key)
 };
 export const set = (key: string, value: string | object) => {
-  return  store.set(key, value)
+  return store.set(key, value)
 };
 export const deleteKey = (key: keyof SchemaType) => store.delete(key);
