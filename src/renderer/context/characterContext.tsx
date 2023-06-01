@@ -6,11 +6,19 @@ import { CharacterType, InventoryItem } from "shared/character"
 interface CharacterContextType {
   character?: CharacterType | null
   setCharacter: (character: CharacterType) => void
+  levelUp: () => void
+  updateHitPoints: (newVal: number) => void
+  updateInventory: (newVal: InventoryItem[]) => void
+  updateGold: (newVal: number) => void
 }
 
 export const CharacterContext = createContext<CharacterContextType>({
   character: null,
-  setCharacter: () => void 0
+  setCharacter: () => void 0,
+  levelUp: () => void 0,
+  updateHitPoints: () => void 0,
+  updateInventory: () => void 0,
+  updateGold: () => void 0
 })
 
 export const CharacterContextProvider = ({ children }: PropsWithChildren): JSX.Element => {
@@ -22,23 +30,27 @@ export const CharacterContextProvider = ({ children }: PropsWithChildren): JSX.E
     if (!character) return
     const newLevel = character.level + 1
     setCharacter({...character, level: newLevel})
-    const res = await store.set('character', {...character, level: newLevel})
-    return res
+    await store.set('character', {...character, level: newLevel})
   }
   
   const updateHitPoints = async (newVal: number) => {
     if (!character) return
     if (newVal > character.maxHitpoints) return
     setCharacter({...character, currentHitpoints: newVal})
-    const res = await store.set('character', {...character, currentHitpoints: newVal})
-    return res
+    await store.set('character', {...character, currentHitpoints: newVal})
   }
 
   const updateInventory = (newItem: InventoryItem) => {
     if (!character) return
     const foundItem = character.inventory.find((item) => {
       if (item.name === newItem.name) {
-        item.quantity += newItem.quantity
+        if (item.quantity && newItem.quantity) {
+          item.quantity += newItem.quantity
+        } else if (item.quantity && !newItem.quantity) {
+          item.quantity += 1
+        } else {
+          item.quantity = 1
+        }
         return item
       }
     }) 

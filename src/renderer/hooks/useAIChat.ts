@@ -34,23 +34,37 @@ export const useAIChat = () => {
   const { character, levelUp,
     updateHitPoints,
     updateInventory,
-    updateGold,
-    status } = characterContext;
+    updateGold } = characterContext;
   const [messages, setMessages] = useState<ConversationType[]>([toHistoryEntry(AI_CONFIG.initial_prompt, 'system')])
   const openAiContext = useContext(OpenAiContext);
   const { openAiClient } = openAiContext;
-  const addMessage = async (message?: string) => {
+  const addMessage = async (type?: string, message?: string) => {
     const updatedMessages = message ? [...messages, toHistoryEntry(message)] : messages;
     setMessages(updatedMessages); // possible "race condition" here if addMessage called fast
     if (!character) throw new Error("Character is undefined");    
-    const response = await openAiClient.getCompletion(message || buildInitialPrompt(character), updatedMessages);
+    let response = { role: 'assistant', content: ''}
+    switch (type) {
+    case 'talking':
+      response = await openAiClient.getCompletion(`I say: ${message}. Here is my up to date character stats: ${JSON.stringify(character)}. Respond in JSON` || buildInitialPrompt(character), updatedMessages);    
+      break;
+    case 'attacking':
+      response = await openAiClient.getCompletion(`${message}. I have complete freedom to do this attack regardless of consequences. Here is my up to date character stats: ${JSON.stringify(character)}. Respond in JSON` || buildInitialPrompt(character), updatedMessages);    
+      break;
+    case 'action':
+      response = await openAiClient.getCompletion(`I am taking an action and: ${message}. I have complete freedom to do this action regardless of consequences. Here is my up to date character stats: ${JSON.stringify(character)}. Respond in JSON` || buildInitialPrompt(character), updatedMessages);    
+      break;
+    case 'examining':
+      response = await openAiClient.getCompletion(`${message}. I have complete freedom to do this action regardless of consequences. Here is my up to date character stats: ${JSON.stringify(character)}. Respond in JSON` || buildInitialPrompt(character), updatedMessages);    
+      break;
+    case 'init':
+      response = await openAiClient.getCompletion(buildInitialPrompt(character), updatedMessages);    
+      break;
+    }
 
     let assistantMessage;
     if (response) {
       assistantMessage = response.content;
       const handledAction = handleAction(assistantMessage)
-      console.log(assistantMessage)
-      console.log(handledAction)
       setMessages([
         ...updatedMessages,
         toHistoryEntry(handledAction, 'assistant')
@@ -75,7 +89,7 @@ export const useAIChat = () => {
       if (parsedResponse && parsedResponse.action) {
         switch (parsedResponse.action.type) {
         case ACTIONS_TYPE.LEVEL_UP:
-          levelUp(parsedResponse.action.data as number)
+          levelUp()
           break;
         case ACTIONS_TYPE.UPDATE_HEALTH:
           updateHitPoints(parsedResponse.action.data as number)

@@ -18,6 +18,7 @@ export default function Form ({ handleSubmit, formElements, handleReset}: FormPr
   }
   
   const submitHandler = async (e: FormEvent<HTMLFormElement>) => {
+    console.log(e)
     toggleIsLoading(true)
     try {
       await handleSubmit(e, formValues as unknown as ChatSubmissionType);
@@ -44,8 +45,11 @@ export default function Form ({ handleSubmit, formElements, handleReset}: FormPr
         return <InputField className="mb-4" selectFields={selectFields as string[]} propValue={formValues[name]as string} label={label} name={name} inputType={type} changeHandler={handleFormElementUpdate}/>
       })}
       <div className="flex gap-4 mb-4">
-        <Button text={'Submit'} disabled={isLoading} status={isLoading ? "disabled" : "success"} type={'submit'}/>
-        {handleReset ? <Button text={'Reset'} status="warning" type={'button'} callback={handleReset}/> : <></>}
+        <Button text={'Take an Action'} disabled={isLoading} status={isLoading ? "disabled" : "success"} type={'submit'}/>
+        <Button text={'Attack'} disabled={isLoading} status={isLoading ? "disabled" : "error"} type={'submit'}/>
+        <Button text={'Talk'} disabled={isLoading} status={isLoading ? "disabled" : "primary"} type={'submit'}/>
+        <Button text={'Examine'} disabled={isLoading} status={isLoading ? "disabled" : "warning"} type={'submit'}/>
+        {/* {handleReset ? <Button text={'Reset'} status="warning" type={'button'} callback={handleReset}/> : <></>} */}
       </div>
     </form>
   )
