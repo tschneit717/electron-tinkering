@@ -16,22 +16,29 @@ export default function CharacterSheet () {
       <div className={`nes-container with-title is-centered ${isDark ? 'is-dark': ''}`}>
         <p className="title">{name}</p>
         <div className="flex flex-wrap justify-between">
-          <div className="lists text-left pl-6 mt-4">
+          <div className="lists text-left pl-6 mt-4 mb-4">
             <ul className="nes-list is-disc ">
               <li>Level: {level}</li>
               <li>Race: {race}</li>
               <li>Class: {classType}</li>
             </ul>
           </div>
-          <div className={`nes-container w-auto ${isDark ? 'is-dark': ''}`}>
+          <div className={`nes-container w-auto mb-4 ${isDark ? 'is-dark': ''}`}>
             <p>HP: <span className="nes-text is-error">{currentHitpoints}/{maxHitpoints}</span></p>
           </div>
-          <div className={`nes-container with-title w-full mt-4 ${isDark ? 'is-dark': ''}`}>
+          <div className={`nes-container with-title w-full ${isDark ? 'is-dark': ''}`}>
             <p className="title">Inventory</p>
-            <ul className="nes-list is-disc pl-6 flex align-start flex-wrap max-h-96">
+            <ul className="nes-list is-disc pl-6 flex align-start flex-wrap flex-col text-left max-h-96">
               <li>Gold: {gold}</li>
               {inventory ? inventory.map((item) => {
-                return <li key={item.name}>{item.name} x {item.quantity}</li>
+                const capitalize = (s: string) => {
+                  if (typeof s !== 'string') return ''
+                  return s.charAt(0).toUpperCase() + s.slice(1)
+                }
+                if (item.name === 'gold') return (<></>)
+                if (item.name || item.item) return (
+                  <li key={item.name ?? item.item}>{capitalize(item.name || item.item || '')} x {item.quantity}</li>
+                ) 
               }) : <></>}
             </ul>
           </div>

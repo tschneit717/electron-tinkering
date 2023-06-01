@@ -1,9 +1,7 @@
 export interface InventoryItem {
-  name: string
-  description: string
-  value: number
-  weight: number
-  quantity: number
+  name?: string
+  item? : string
+  quantity?: number
 }
 
 export interface CharacterType {
