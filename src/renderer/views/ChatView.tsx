@@ -1,19 +1,20 @@
-import { FormEvent, useContext, useEffect, useState } from "react"
+import { FormEvent, SyntheticEvent, useContext, useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import { Conversation } from "renderer/components/Conversation"
 import { Form } from "renderer/components/Form"
+import { FormElement } from "renderer/components/Form/Form.interface"
 import Layout from "renderer/components/Layout/Layout"
 import { CharacterContext } from "renderer/context/characterContext"
 import { ViewContext } from "renderer/context/viewContext"
 import { useAIChat } from "renderer/hooks/useAIChat"
 import { getRandomInt } from "renderer/utilities/getRandomNumbers"
-import { ChatSubmissionType } from "shared/types"
+import { BUTTON_TYPES, ChatSubmissionType } from "shared/types"
 
 export default function ChatView(): JSX.Element {
   const viewContext = useContext(ViewContext)
   const { isDark } = viewContext
   const characterContext = useContext(CharacterContext)
-  const { character, setCharacter } = characterContext
+  const { character } = characterContext
 
   if (!character) {
     return (
@@ -26,23 +27,8 @@ export default function ChatView(): JSX.Element {
     )
   }
 
-  const [messages, addMessage, reset] = useAIChat()
+  const [messages, addMessage] = useAIChat()
   const [progress, setProgress] = useState(0)
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>, values: ChatSubmissionType): Promise<void> => {
-    e.preventDefault()
-    try {
-      await addMessage(values.prompt)
-    } catch (e) {
-      console.error(e)
-    }
-  }
-  const handleResetConversation = (): void => {
-    try {
-      reset()
-    } catch (e) {
-      console.error(e)
-    }
-  }
 
   useEffect(() => {
     window.scrollTo(0, document.body.scrollHeight);
@@ -76,6 +62,52 @@ export default function ChatView(): JSX.Element {
     }
   }
 
+  const formElements: FormElement[] = [
+    {
+      label: "Write your prompt here",
+      name: "prompt",
+      type: "textarea"
+    }
+  ]
+
+  const formButtons = [
+    {
+      label: 'Info',
+      callback: (e: SyntheticEvent<Element, Event>, values: ChatSubmissionType): void => {
+        addMessage('info', values.prompt)
+      },
+      type: BUTTON_TYPES.STANDARD,
+    },
+    {
+      label: 'Take an Action',
+      callback: (e: SyntheticEvent<Element, Event>, values: ChatSubmissionType): void => {
+        addMessage('action', values.prompt)
+      },
+      type: BUTTON_TYPES.PRIMARY,
+    },
+    {
+      label: 'Talk',
+      callback: (e: SyntheticEvent<Element, Event>, values: ChatSubmissionType): void => {
+        addMessage('talking', values.prompt)
+      },
+      type: BUTTON_TYPES.SUCCESS,
+    },
+    {
+      label: 'Attack',
+      callback: (e: SyntheticEvent<Element, Event>, values: ChatSubmissionType): void => {
+        addMessage('attacking', values.prompt)
+      },
+      type: BUTTON_TYPES.ERROR,
+    },
+    {
+      label: 'Examine',
+      callback: (e: SyntheticEvent<Element, Event>, values: ChatSubmissionType): void => {
+        addMessage('examining', values.prompt)
+      },
+      type: BUTTON_TYPES.WARNING,
+    }
+  ]
+
   return (
     <Layout title={"Chat Adventures"}>  
       <section className={`nes-container mb-4 ${isDark ? 'is-dark' : ''}`}>
@@ -84,14 +116,9 @@ export default function ChatView(): JSX.Element {
         </section>
       </section>
       <Form
-        submitButtonLabel="Send"
-        formElements={[{
-          label: "Write your prompt here",
-          name: "prompt",
-          type: "textarea"
-        }]}
-        handleSubmit={handleSubmit}
-        handleReset={handleResetConversation}/>
+        formElements={formElements}
+        formButtons={formButtons}
+      />
     </Layout>
   )
 }

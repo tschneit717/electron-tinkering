@@ -1,17 +1,33 @@
-import { type ButtonHTMLAttributes, type DetailedHTMLProps } from 'react'
+import { ReactNode, type ButtonHTMLAttributes, type DetailedHTMLProps, Fragment } from 'react'
 import cn from 'classnames'
 import './Button.module.css'
+import { BUTTON_ELEMENT_TYPES, BUTTON_TYPES } from 'shared/types'
+
+
 
 interface ButtonProps extends DetailedHTMLProps<ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement> {
-  status: 'primary' | 'success' | 'warning' | 'error' | 'disabled' | 'dark' | 'standard'
+  status?: BUTTON_TYPES
+  as?: BUTTON_ELEMENT_TYPES
   text?: string,
   callback?: () => void
 }
 
-function Button({ text, status = 'primary', callback, children, ...rest }: ButtonProps): JSX.Element {
+const renderElement = (status?: BUTTON_TYPES, as?: BUTTON_ELEMENT_TYPES, callback?: () => void,  children?: ReactNode,  text?: string, rest: any) => {
+  if (as === BUTTON_ELEMENT_TYPES.INPUT) {
+    return (
+      <input key={text} className={cn(['nes-btn', `is-${status}`])} value={text} type="submit"></input>
+    )}
+  if (as === BUTTON_ELEMENT_TYPES.A) {
+    return (
+      <a key={text} className={cn(['nes-btn', `is-${status}`])} {...rest}>{children ?? text}</a>
+    )}
   return (
-    <button className={cn(['nes-btn', `is-${status}`])} {...rest} onClick={callback}>{text ?? children}</button>
+    <button key={text} className={cn(['nes-btn', `is-${status}`])} {...rest} onClick={callback}>{children ?? text }</button>
   )
 }
 
-export default Button
+function ButtonComponent({ text, status, callback, as = BUTTON_ELEMENT_TYPES.BUTTON, children, ...rest }: ButtonProps): JSX.Element {
+  return (<Fragment key={`${text}-${status}`}>{renderElement(status, as, callback, children, text, rest)}</Fragment>)
+}
+
+export default ButtonComponent

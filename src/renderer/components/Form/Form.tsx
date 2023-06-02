@@ -1,10 +1,11 @@
 import { FormEvent, useState } from "react"
 import { Button } from "../Button"
 import { InputField } from "./Input"
-import { ChatSubmissionType } from "shared/types"
+import { BUTTON_ELEMENT_TYPES, BUTTON_TYPES, ChatSubmissionType } from "shared/types"
 import { FormElement, FormProps } from "./Form.interface"
+import { SyntheticEvent } from "react"
 
-export default function Form ({ handleSubmit, formElements, handleReset}: FormProps) {
+export default function Form ({ formElements, formButtons, error}: FormProps) {
   const initialSet = {} as FormElement
   formElements.map((element) => { initialSet[!Array.isArray(element) ? element.name : element[1]] = '' })
 
@@ -16,12 +17,16 @@ export default function Form ({ handleSubmit, formElements, handleReset}: FormPr
       [event.target.name]: event.target.value
     })
   }
-  
-  const submitHandler = async (e: FormEvent<HTMLFormElement>) => {
-    console.log(e)
+
+  const submitHandler = async (e: SyntheticEvent) => {
+    e.preventDefault()
     toggleIsLoading(true)
+    const submitter = (e.nativeEvent as SubmitEvent).submitter as HTMLInputElement;
+    const action = formButtons.find((button) => button.label === submitter.value)?.callback
     try {
-      await handleSubmit(e, formValues as unknown as ChatSubmissionType);
+      if (action) {
+        action(e, formValues as unknown as ChatSubmissionType)
+      }
       setFormValues(Object.fromEntries(Object.entries(formValues).map((formValue) => {
         return [formValue[0], formValue[1] = '']
       })))
@@ -32,25 +37,28 @@ export default function Form ({ handleSubmit, formElements, handleReset}: FormPr
   }
 
   return (
-    <form onSubmit={submitHandler}>
-      {formElements.map((element, index) => {
-        const labelArr = Object.entries(element)[0]
-        const nameArr = Object.entries(element)[1]
-        const typeArr = Object.entries(element)[2] ?? ['type', 'text']
-        const selectFieldsArr = Object.entries(element)[3] as string[]
-        const label = labelArr[1] as string
-        const name = nameArr[1] as string
-        const type = typeArr[1] as string
-        const selectFields = selectFieldsArr ? selectFieldsArr[1] : [] as string[]
-        return <InputField className="mb-4" selectFields={selectFields as string[]} propValue={formValues[name]as string} label={label} name={name} inputType={type} changeHandler={handleFormElementUpdate}/>
-      })}
-      <div className="flex gap-4 mb-4">
-        <Button text={'Take an Action'} disabled={isLoading} status={isLoading ? "disabled" : "success"} type={'submit'}/>
-        <Button text={'Attack'} disabled={isLoading} status={isLoading ? "disabled" : "error"} type={'submit'}/>
-        <Button text={'Talk'} disabled={isLoading} status={isLoading ? "disabled" : "primary"} type={'submit'}/>
-        <Button text={'Examine'} disabled={isLoading} status={isLoading ? "disabled" : "warning"} type={'submit'}/>
-        {/* {handleReset ? <Button text={'Reset'} status="warning" type={'button'} callback={handleReset}/> : <></>} */}
-      </div>
-    </form>
+
+    <>
+     
+      <form onSubmit={submitHandler}>
+        {formElements.map((element, index) => {
+          const labelArr = Object.entries(element)[0]
+          const nameArr = Object.entries(element)[1]
+          const typeArr = Object.entries(element)[2] ?? ['type', 'text']
+          const selectFieldsArr = Object.entries(element)[3] as string[]
+          const label = labelArr[1] as string
+          const name = nameArr[1] as string
+          const type = typeArr[1] as string
+          const selectFields = selectFieldsArr ? selectFieldsArr[1] : [] as string[]
+          return <InputField key={name} className="mb-4" selectFields={selectFields as string[]} propValue={formValues[name]as string} label={label} name={name} inputType={type} changeHandler={handleFormElementUpdate}/>
+        })}
+        {error ? <p className="nes-text text-red-500 mb-4">{error}</p> : <> </>}
+        <div className="flex flex-wrap gap-4 mb-4">
+          {formButtons.map((button) => {
+            return <Button key={button.label} as={BUTTON_ELEMENT_TYPES.INPUT} text={button.label} disabled={isLoading} status={isLoading ? BUTTON_TYPES.DISABLED : button.type} type={'submit'}/>
+          })}
+        </div>
+      </form>
+    </>
   )
 }

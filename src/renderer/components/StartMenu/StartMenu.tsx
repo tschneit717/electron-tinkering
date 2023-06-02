@@ -54,7 +54,7 @@ export default function StartMenu({ links }: StartMenuProps) {
         <li 
           className={cn(styles.startMenuItem, 'relative',  { [styles.startMenuItemActive]: activeItem === i })}
           key={link.name}>
-          <Link onFocus={() => setActiveItem(i)} ref={elRefs[i]} to={link.path}>
+          <Link key={link.path} onFocus={() => setActiveItem(i)} ref={elRefs[i]} to={link.path}>
             {link.name}
           </Link>
         </li>

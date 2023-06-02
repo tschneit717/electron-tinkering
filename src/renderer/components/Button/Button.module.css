@@ -1,3 +1,6 @@
+:global(.nes-btn.is-standard) {
+  background-color: #fff;
+}
 :global(.nes-btn.is-dark) {
   background-color: #292524;
   color: #fff;    

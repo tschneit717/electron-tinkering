@@ -30,7 +30,7 @@ const routes = [
 
 export default function App(): JSX.Element {
   const routeComponents = routes.map(({ path, component }, key) => (
-    <Route path={path} element={component}></Route>
+    <Route key={path} path={path} element={component}></Route>
   ))
   return (
     <ViewContextProvider>

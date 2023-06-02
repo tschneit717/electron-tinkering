@@ -8,6 +8,22 @@ export interface ConversationType {
   content: string
 }
 
+export enum BUTTON_ELEMENT_TYPES {
+  BUTTON = 'button',
+  INPUT = 'input',
+  A = 'a'
+}
+
+export enum BUTTON_TYPES {
+  PRIMARY = 'primary',
+  SUCCESS = 'success',
+  WARNING = 'warning',
+  ERROR = 'error',
+  DISABLED = 'disabled',
+  DARK = 'dark',
+  STANDARD = 'standard',
+}
+
 export interface SettingsType {
   openai: unknown
 }

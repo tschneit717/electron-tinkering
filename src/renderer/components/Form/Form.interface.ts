@@ -1,12 +1,15 @@
-import { FormEvent } from "react";
-import { SubmissionValues } from "shared/types";
+import { FormEvent, SyntheticEvent } from "react";
+import { BUTTON_TYPES, SubmissionValues } from "shared/types";
 
 export interface FormElement {
   [key: string]: string | string[];
 }
 export interface FormProps {
-  submitButtonLabel: string
-  handleSubmit: (e: FormEvent<HTMLFormElement>, formValues: SubmissionValues) => Promise<void> | void
   formElements: FormElement[]
-  handleReset?: () => void
+  formButtons: {
+    label: string
+    callback: (e: SyntheticEvent<Element, Event>, formValues: SubmissionValues) => Promise<void> | void
+    type: BUTTON_TYPES
+  }[]
+  error?: string 
 }

@@ -56,8 +56,11 @@ export const useAIChat = () => {
     case 'examining':
       response = await openAiClient.getCompletion(`${message}. I have complete freedom to do this action regardless of consequences. Here is my up to date character stats: ${JSON.stringify(character)}. Respond in JSON` || buildInitialPrompt(character), updatedMessages);    
       break;
+    case 'info':
+      response = await openAiClient.getCompletion(`${message}. Only tell me this information if my character would have access to this information`, updatedMessages);    
+      break;
     case 'init':
-      response = await openAiClient.getCompletion(buildInitialPrompt(character), updatedMessages);    
+      response = await openAiClient.getCompletion(`${buildInitialPrompt(character)}. Respond in JSON`, updatedMessages);    
       break;
     }
 
@@ -65,6 +68,7 @@ export const useAIChat = () => {
     if (response) {
       assistantMessage = response.content;
       const handledAction = handleAction(assistantMessage)
+      console.log('handledAction', handledAction)
       setMessages([
         ...updatedMessages,
         toHistoryEntry(handledAction, 'assistant')
@@ -76,7 +80,7 @@ export const useAIChat = () => {
   };
 
   useEffect(() => {
-    addMessage();
+    addMessage('init');
   }, []);
 
   const reset = () => {
@@ -118,7 +122,7 @@ export const useAIChat = () => {
 
   return [messages, addMessage, reset, handleAction] as [
     ConversationType[],
-    (message: string) => Promise<string>,
+    (type: string, message: string) => Promise<string>,
     () => void,
     () => string
   ];

@@ -10,6 +10,7 @@ export default function CharacterSheet () {
   const { character } = characterContext
   const { name, level, race, class: classType, currentHitpoints, maxHitpoints, gold, inventory } = character || {}
   if (!character) return (<div>No character found</div>)
+  console.log(currentHitpoints)
   return (
     <div>
       <h1>Character Sheet</h1>
@@ -24,7 +25,7 @@ export default function CharacterSheet () {
             </ul>
           </div>
           <div className={`nes-container w-auto mb-4 ${isDark ? 'is-dark': ''}`}>
-            <p>HP: <span className="nes-text is-error">{currentHitpoints}/{maxHitpoints}</span></p>
+            <p>HP: <span className="nes-text is-error">{`${currentHitpoints}`}/{`${maxHitpoints}`}</span></p>
           </div>
           <div className={`nes-container with-title w-full ${isDark ? 'is-dark': ''}`}>
             <p className="title">Inventory</p>
