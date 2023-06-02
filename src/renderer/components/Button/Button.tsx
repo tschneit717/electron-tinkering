@@ -3,8 +3,6 @@ import cn from 'classnames'
 import './Button.module.css'
 import { BUTTON_ELEMENT_TYPES, BUTTON_TYPES } from 'shared/types'
 
-
-
 interface ButtonProps extends DetailedHTMLProps<ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement> {
   status?: BUTTON_TYPES
   as?: BUTTON_ELEMENT_TYPES
@@ -12,7 +10,7 @@ interface ButtonProps extends DetailedHTMLProps<ButtonHTMLAttributes<HTMLButtonE
   callback?: () => void
 }
 
-const renderElement = (status?: BUTTON_TYPES, as?: BUTTON_ELEMENT_TYPES, callback?: () => void,  children?: ReactNode,  text?: string, rest: any) => {
+const renderElement = (status?: BUTTON_TYPES, as?: BUTTON_ELEMENT_TYPES, callback?: () => void,  children?: ReactNode,  text?: string, rest?: any) => {
   if (as === BUTTON_ELEMENT_TYPES.INPUT) {
     return (
       <input key={text} className={cn(['nes-btn', `is-${status}`])} value={text} type="submit"></input>

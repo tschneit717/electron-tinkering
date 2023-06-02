@@ -1,4 +1,4 @@
-import { LegacyRef, createRef, useEffect, useState } from 'react'
+import { LegacyRef, Ref, RefObject, createRef, useEffect, useState } from 'react'
 import styles from './StartMenu.module.css'
 import cn from 'classnames'
 import { Link } from 'react-router-dom'
@@ -12,7 +12,7 @@ interface StartMenuProps {
 
 export default function StartMenu({ links }: StartMenuProps) {
   const linksLength = links.length;
-  const [elRefs, setElRefs] = useState<LegacyRef<HTMLAnchorElement>[]>([]);
+  const [elRefs, setElRefs] = useState<Ref<HTMLAnchorElement>[]>([]);
   const [activeItem, setActiveItem] = useState(0);
 
   useEffect(() => {
@@ -37,7 +37,10 @@ export default function StartMenu({ links }: StartMenuProps) {
   }
 
   useEffect(() => {
-    elRefs[activeItem]?.current?.focus();
+    const activeRef = elRefs[activeItem] as RefObject<HTMLAnchorElement>;
+    if (activeRef) {
+      activeRef.current?.focus();
+    }
   }, [activeItem])
 
   useEffect(() => {
@@ -46,7 +49,12 @@ export default function StartMenu({ links }: StartMenuProps) {
   }, [])
 
   useEffect(() => {
-    elRefs[0]?.current?.focus();
+    if (elRefs[0]) {
+      const firstRef = elRefs[0] as RefObject<HTMLAnchorElement>;
+      if (firstRef) {
+        firstRef.current?.focus();
+      }
+    }
   }, [elRefs]);
   return (
     <ul className="list-none flex flex-col gap-4 mt-12">
